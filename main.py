@@ -1,4 +1,6 @@
 import random
+import time
+from simulacao import SimulacaoProcessos
 
 class Processo:
     def __init__(self, id, tempo_execucao, prioridade=0):
@@ -34,6 +36,12 @@ class GerenciadorDeProcessos:
         novo_processo = Processo(len(self.fila_processos), tempo_execucao, prioridade)
         self.fila_processos.append(novo_processo)
 
+    def exibir_status(self):
+        print("\n=== Status dos Processos ===")
+        for processo in self.fila_processos:
+            print(f"Processo {processo.id} | Estado: {processo.estado} | Tempo Restante: {processo.tempo_restante} | Prioridade: {processo.prioridade}")
+        print("============================\n")
+
     def escalonar_fifo(self):
         while self.fila_processos:
             processo_atual = self.fila_processos.pop(0)
@@ -41,6 +49,8 @@ class GerenciadorDeProcessos:
             
             # Simulando execução completa do processo
             while processo_atual.tempo_restante > 0:
+                self.exibir_status()  # Exibir o status a cada ciclo
+                time.sleep(1)  # Simula o tempo de execução
                 processo_atual.tempo_restante -= 1
             
             processo_atual.finalizar()
@@ -53,47 +63,73 @@ class GerenciadorDeProcessos:
             processo_atual.iniciar()
             
             # Simulando execução limitada pelo quantum
-            if processo_atual.tempo_restante > quantum:
-                processo_atual.tempo_restante -= quantum
-                processo_atual.pronto()  # Colocar o processo de volta como Pronto
-                self.fila_processos.append(processo_atual)  # Reenfileirar o processo
+            for _ in range(quantum):
+                if processo_atual.tempo_restante > 0:
+                    self.exibir_status()  # Exibir o status a cada ciclo
+                    time.sleep(1)  # Simula o tempo de execução
+                    processo_atual.tempo_restante -= 1
+                else:
+                    break
+
+            if processo_atual.tempo_restante > 0:
+                processo_atual.pronto()  # Reenfileirar o processo
+                self.fila_processos.append(processo_atual)
             else:
-                processo_atual.tempo_restante = 0
                 processo_atual.finalizar()
                 self.processos_finalizados.append(processo_atual)
                 print(f"Processo {processo_atual.id} finalizado.")
 
     def escalonar_sjf(self):
-        # Ordenar a fila de processos com base no tempo de execução
-        self.fila_processos.sort(key=lambda p: p.tempo_execucao)
+        self.fila_processos.sort(key=lambda p: p.tempo_execucao)  # Ordenar por menor tempo de execução
 
         while self.fila_processos:
             processo_atual = self.fila_processos.pop(0)
             processo_atual.iniciar()
             
-            # Simulando execução completa do processo
             while processo_atual.tempo_restante > 0:
+                self.exibir_status()  # Exibir o status a cada ciclo
+                time.sleep(1)  # Simula o tempo de execução
                 processo_atual.tempo_restante -= 1
-            
+
             processo_atual.finalizar()
             self.processos_finalizados.append(processo_atual)
             print(f"Processo {processo_atual.id} finalizado.")
 
     def escalonar_prioridade(self):
-        # Ordenar a fila de processos com base na prioridade
-        self.fila_processos.sort(key=lambda p: p.prioridade)
+        self.fila_processos.sort(key=lambda p: p.prioridade)  # Ordenar por prioridade (menor valor é mais prioritário)
 
         while self.fila_processos:
             processo_atual = self.fila_processos.pop(0)
             processo_atual.iniciar()
-            
-            # Simulando execução completa do processo
+
             while processo_atual.tempo_restante > 0:
+                self.exibir_status()  # Exibir o status a cada ciclo
+                time.sleep(1)  # Simula o tempo de execução
                 processo_atual.tempo_restante -= 1
-            
+
             processo_atual.finalizar()
             self.processos_finalizados.append(processo_atual)
             print(f"Processo {processo_atual.id} finalizado.")
+
+    def escalonar_com_bloqueio(self):
+        while self.fila_processos:
+            processo_atual = self.fila_processos.pop(0)
+            processo_atual.iniciar()
+
+            while processo_atual.tempo_restante > 0:
+                if random.choice([True, False]):  # Aleatoriamente bloqueia o processo
+                    processo_atual.bloquear()
+                    self.fila_processos.append(processo_atual)  # Reenfileirar o processo bloqueado
+                    print(f"Processo {processo_atual.id} foi bloqueado e reenfileirado.")
+                    break
+                self.exibir_status()  # Exibir o status a cada ciclo
+                time.sleep(1)  # Simula o tempo de execução
+                processo_atual.tempo_restante -= 1
+
+            if processo_atual.estado != 'Bloqueado':
+                processo_atual.finalizar()
+                self.processos_finalizados.append(processo_atual)
+                print(f"Processo {processo_atual.id} finalizado.")
 
     def simular(self, algoritmo='fifo', quantum=2):
         if algoritmo == 'fifo':
@@ -105,20 +141,6 @@ class GerenciadorDeProcessos:
         elif algoritmo == 'prioridade':
             self.escalonar_prioridade()
 
-    def escalonar_com_bloqueio(self):
-        while self.fila_processos:
-            processo_atual = self.fila_processos.pop(0)
-            processo_atual.iniciar()
-
-            # Simular execução, com possibilidade de bloqueio
-            while processo_atual.tempo_restante > 0:
-                if random.choice([True, False]):  # Aleatoriamente bloqueia o processo
-                    processo_atual.bloquear()
-                    self.fila_processos.append(processo_atual)  # Reenfileirar o processo bloqueado
-                    break  # Interrompe a execução para o próximo processo
-                processo_atual.tempo_restante -= 1
-
-            if processo_atual.estado != 'Bloqueado':
-                processo_atual.finalizar()
-                self.processos_finalizados.append(processo_atual)
-                print(f"Processo {processo_atual.id} finalizado.")
+if __name__ == "__main__":
+    simulacao = SimulacaoProcessos()
+    simulacao.iniciar_simulacao()
