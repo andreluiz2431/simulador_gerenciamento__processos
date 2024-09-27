@@ -8,7 +8,12 @@ class SimulacaoProcessos:
     def iniciar_simulacao(self):
         print("=== Simulação de Gerenciamento de Processos ===")
         
-        algoritmo = input("Escolha o algoritmo de escalonamento (fifo, round_robin, sjf, prioridade): ").strip().lower()
+        algoritmos_validos = ['fifo', 'round_robin', 'sjf', 'prioridade']
+        algoritmo = input(f"Escolha o algoritmo de escalonamento {algoritmos_validos}: ").strip().lower()
+
+        while algoritmo not in algoritmos_validos:
+            print("Algoritmo inválido. Tente novamente.")
+            algoritmo = input(f"Escolha o algoritmo de escalonamento {algoritmos_validos}: ").strip().lower()
 
         if algoritmo == 'round_robin':
             quantum = int(input("Digite o valor do quantum para Round Robin: "))
