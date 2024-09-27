@@ -1,19 +1,29 @@
+import random
+
 class Processo:
     def __init__(self, id, tempo_execucao, prioridade=0):
         self.id = id
         self.tempo_execucao = tempo_execucao
         self.tempo_restante = tempo_execucao
-        self.estado = 'Pronto'  # 'Executando', 'Bloqueado', 'Finalizado'
+        self.estado = 'Pronto'  # Estados: 'Pronto', 'Executando', 'Bloqueado', 'Finalizado'
         self.prioridade = prioridade
 
     def iniciar(self):
         self.estado = 'Executando'
+        print(f"Processo {self.id} está em execução.")
 
     def bloquear(self):
         self.estado = 'Bloqueado'
+        print(f"Processo {self.id} foi bloqueado.")
 
     def finalizar(self):
         self.estado = 'Finalizado'
+        print(f"Processo {self.id} foi finalizado.")
+    
+    def pronto(self):
+        self.estado = 'Pronto'
+        print(f"Processo {self.id} está pronto para execução.")
+
 
 class GerenciadorDeProcessos:
     def __init__(self):
@@ -45,6 +55,7 @@ class GerenciadorDeProcessos:
             # Simulando execução limitada pelo quantum
             if processo_atual.tempo_restante > quantum:
                 processo_atual.tempo_restante -= quantum
+                processo_atual.pronto()  # Colocar o processo de volta como Pronto
                 self.fila_processos.append(processo_atual)  # Reenfileirar o processo
             else:
                 processo_atual.tempo_restante = 0

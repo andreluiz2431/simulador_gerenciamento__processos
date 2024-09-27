@@ -14,3 +14,11 @@ Troca de Contexto: simular a troca de processos entre o estado de execução e p
 Interface de Linha de Comando (CLI) ou Interface Gráfica (GUI):
 Exibir o estado dos processos, tempos de execução, e eventos de escalonamento.
 Atualizar dinamicamente conforme os processos são escalonados e executados.
+
+
+Gerenciamento de Estados dos Processos
+
+Pronto: O processo está aguardando para ser escalonado.
+Executando: O processo está em execução.
+Bloqueado: O processo foi interrompido e está aguardando um evento externo.
+Finalizado: O processo completou sua execução.
