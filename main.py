@@ -104,3 +104,21 @@ class GerenciadorDeProcessos:
             self.escalonar_sjf()
         elif algoritmo == 'prioridade':
             self.escalonar_prioridade()
+
+    def escalonar_com_bloqueio(self):
+        while self.fila_processos:
+            processo_atual = self.fila_processos.pop(0)
+            processo_atual.iniciar()
+
+            # Simular execução, com possibilidade de bloqueio
+            while processo_atual.tempo_restante > 0:
+                if random.choice([True, False]):  # Aleatoriamente bloqueia o processo
+                    processo_atual.bloquear()
+                    self.fila_processos.append(processo_atual)  # Reenfileirar o processo bloqueado
+                    break  # Interrompe a execução para o próximo processo
+                processo_atual.tempo_restante -= 1
+
+            if processo_atual.estado != 'Bloqueado':
+                processo_atual.finalizar()
+                self.processos_finalizados.append(processo_atual)
+                print(f"Processo {processo_atual.id} finalizado.")
