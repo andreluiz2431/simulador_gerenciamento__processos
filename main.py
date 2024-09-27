@@ -25,21 +25,71 @@ class GerenciadorDeProcessos:
         self.fila_processos.append(novo_processo)
 
     def escalonar_fifo(self):
-        # Implementar FIFO
-        pass
+        while self.fila_processos:
+            processo_atual = self.fila_processos.pop(0)
+            processo_atual.iniciar()
+            
+            # Simulando execução completa do processo
+            while processo_atual.tempo_restante > 0:
+                processo_atual.tempo_restante -= 1
+            
+            processo_atual.finalizar()
+            self.processos_finalizados.append(processo_atual)
+            print(f"Processo {processo_atual.id} finalizado.")
 
     def escalonar_round_robin(self, quantum):
-        # Implementar Round-Robin
-        pass
+        while self.fila_processos:
+            processo_atual = self.fila_processos.pop(0)
+            processo_atual.iniciar()
+            
+            # Simulando execução limitada pelo quantum
+            if processo_atual.tempo_restante > quantum:
+                processo_atual.tempo_restante -= quantum
+                self.fila_processos.append(processo_atual)  # Reenfileirar o processo
+            else:
+                processo_atual.tempo_restante = 0
+                processo_atual.finalizar()
+                self.processos_finalizados.append(processo_atual)
+                print(f"Processo {processo_atual.id} finalizado.")
 
     def escalonar_sjf(self):
-        # Implementar Shortest Job First
-        pass
+        # Ordenar a fila de processos com base no tempo de execução
+        self.fila_processos.sort(key=lambda p: p.tempo_execucao)
+
+        while self.fila_processos:
+            processo_atual = self.fila_processos.pop(0)
+            processo_atual.iniciar()
+            
+            # Simulando execução completa do processo
+            while processo_atual.tempo_restante > 0:
+                processo_atual.tempo_restante -= 1
+            
+            processo_atual.finalizar()
+            self.processos_finalizados.append(processo_atual)
+            print(f"Processo {processo_atual.id} finalizado.")
 
     def escalonar_prioridade(self):
-        # Implementar escalonamento por prioridade
-        pass
+        # Ordenar a fila de processos com base na prioridade
+        self.fila_processos.sort(key=lambda p: p.prioridade)
 
-    def simular(self):
-        # Simular a execução e escalonamento dos processos
-        pass
+        while self.fila_processos:
+            processo_atual = self.fila_processos.pop(0)
+            processo_atual.iniciar()
+            
+            # Simulando execução completa do processo
+            while processo_atual.tempo_restante > 0:
+                processo_atual.tempo_restante -= 1
+            
+            processo_atual.finalizar()
+            self.processos_finalizados.append(processo_atual)
+            print(f"Processo {processo_atual.id} finalizado.")
+
+    def simular(self, algoritmo='fifo', quantum=2):
+        if algoritmo == 'fifo':
+            self.escalonar_fifo()
+        elif algoritmo == 'round_robin':
+            self.escalonar_round_robin(quantum)
+        elif algoritmo == 'sjf':
+            self.escalonar_sjf()
+        elif algoritmo == 'prioridade':
+            self.escalonar_prioridade()
