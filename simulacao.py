@@ -6,6 +6,14 @@ class SimulacaoProcessos:
         self.gerenciador = GerenciadorDeProcessos()
 
     def iniciar_simulacao(self):
+        """
+        Inicia a simulação do gerenciamento de processos.
+
+        Essa função interage com o usuário para escolher um algoritmo de escalonamento
+        e um valor para o quantum (se necessário). Em seguida, gera aleatoriamente
+        processos com tempos de execução e prioridades e os adiciona a fila de processos.
+        Por fim, chama o método simular() do gerenciador para iniciar a simulação.
+        """
         print("=== Simulação de Gerenciamento de Processos ===")
         
         algoritmos_validos = ['fifo', 'round_robin', 'sjf', 'prioridade']
