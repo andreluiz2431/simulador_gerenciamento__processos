@@ -87,17 +87,21 @@ class GerenciadorDeProcessos:
         """
         # Enquanto houver processos na fila
         while self.fila_processos:
+            # Remove o primeiro processo da fila
             processo_atual = self.fila_processos.pop(0)
 
             # Verifica se o processo precisa ser bloqueado
             if processo_atual.tempo_restante > 0 and random.random() < 0.2:
+                # Bloqueia o processo
                 processo_atual.bloquear()
+                # Mostra o estado atual dos processos
                 print(f"Processo {processo_atual.id} foi bloqueado")
                 # Adiciona o processo bloqueado a uma fila de processos bloqueados
                 self.processos_bloqueados.append(processo_atual)
             else:
                 # Executa o processo normalmente
                 processo_atual.iniciar()
+                # Enquanto o tempo restante do processo for maior que 0
                 while processo_atual.tempo_restante > 0:
                     # Enquanto o tempo restante do processo for maior que 0
                     # Mostra o estado atual dos processos
@@ -106,6 +110,7 @@ class GerenciadorDeProcessos:
                     processo_atual.tempo_restante -= 1
                     # Incrementa o tempo atual
                     self.tempo_atual += 1
+
                 # Finaliza o processo
                 processo_atual.finalizar()
                 # Adiciona o processo finalizado na lista de processos finalizados
@@ -121,8 +126,11 @@ class GerenciadorDeProcessos:
         
         # Executa os processos desbloqueados após eles entrarem na fila de processos novamente
         while self.fila_processos:
+            # Remove o primeiro processo da fila
             processo_atual = self.fila_processos.pop(0)
+            # Inicia a execução do processo
             processo_atual.iniciar()
+            # Enquanto o tempo restante do processo for maior que 0
             while processo_atual.tempo_restante > 0:
                 # Mostra o estado atual dos processos
                 self.exibir_estados_processos_graficamente()
@@ -130,6 +138,7 @@ class GerenciadorDeProcessos:
                 processo_atual.tempo_restante -= 1
                 # Incrementa o tempo atual
                 self.tempo_atual += 1
+
             # Finaliza o processo
             processo_atual.finalizar()
             # Adiciona o processo finalizado na lista de processos finalizados
