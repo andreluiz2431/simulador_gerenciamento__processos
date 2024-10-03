@@ -66,14 +66,23 @@ class GerenciadorDeProcessos:
         Implementa o algoritmo FIFO para escalonamento de processos.
         Remove o primeiro processo da fila, inicia sua execução até que seu tempo restante seja 0 e finaliza o processo, armazenando-o na lista de finalizados.
         """
+        # Enquanto houver processos na fila
         while self.fila_processos:
+            # Remove o primeiro processo da fila
             processo_atual = self.fila_processos.pop(0)
+            # Inicia a execução do processo
             processo_atual.iniciar()
+            # Enquanto o tempo restante do processo for maior que 0
             while processo_atual.tempo_restante > 0:
+                # Mostra o estado atual dos processos
                 self.exibir_estados_processos()
+                # Decrementa o tempo restante do processo
                 processo_atual.tempo_restante -= 1
+                # Incrementa o tempo atual
                 self.tempo_atual += 1
+            # Finaliza o processo
             processo_atual.finalizar()
+            # Adiciona o processo finalizado na lista de processos finalizados
             self.processos_finalizados.append(processo_atual)
 
     def escalonar_round_robin(self, quantum):
@@ -83,20 +92,33 @@ class GerenciadorDeProcessos:
         Se o tempo restante for maior que o quantum, o processo é colocado de volta na fila.
         Caso contrário, o processo é finalizado.
         """
+        # Enquanto houver processos na fila
         while self.fila_processos:
+            # Remove o primeiro processo da fila
             processo_atual = self.fila_processos.pop(0)
+            # Inicia a execução do processo
             processo_atual.iniciar()
+            # Calcula o tempo de execução do processo
+            # Será o mínimo entre o tempo restante do processo e o quantum
             tempo_execucao = min(processo_atual.tempo_restante, quantum)
+            # Executa o processo por tempo_execucao vezes
             for _ in range(tempo_execucao):
+                # Mostra o estado atual dos processos
                 self.exibir_estados_processos()
+                # Decrementa o tempo restante do processo
                 processo_atual.tempo_restante -= 1
+                # Incrementa o tempo atual
                 self.tempo_atual += 1
-            
+
+            # Se o tempo restante do processo for maior que 0
+            # Coloca o processo de volta na fila
             if processo_atual.tempo_restante > 0:
                 processo_atual.pronto()
                 self.fila_processos.append(processo_atual)
+            # Caso contrário, o processo é finalizado
             else:
                 processo_atual.finalizar()
+                # Adiciona o processo finalizado na lista de processos finalizados
                 self.processos_finalizados.append(processo_atual)
 
     def escalonar_sjf(self):
@@ -104,15 +126,25 @@ class GerenciadorDeProcessos:
         Implementa o algoritmo SJF (Shortest Job First) para escalonamento de processos.
         Ordena a fila de processos pelo tempo de execução e executa cada processo até que seu tempo restante seja 0, finalizando-o.
         """
+        # Ordena a fila de processos pelo tempo de execução
         self.fila_processos.sort(key=lambda p: p.tempo_execucao)
+        # Enquanto houver processos na fila
         while self.fila_processos:
+            # Remove o primeiro processo da fila
             processo_atual = self.fila_processos.pop(0)
+            # Inicia a execução do processo
             processo_atual.iniciar()
+            # Enquanto o tempo restante do processo for maior que 0
             while processo_atual.tempo_restante > 0:
+                # Mostra o estado atual dos processos
                 self.exibir_estados_processos()
+                # Decrementa o tempo restante do processo
                 processo_atual.tempo_restante -= 1
+                # Incrementa o tempo atual
                 self.tempo_atual += 1
+            # Finaliza o processo
             processo_atual.finalizar()
+            # Adiciona o processo finalizado na lista de processos finalizados
             self.processos_finalizados.append(processo_atual)
 
     def escalonar_prioridade(self):
@@ -120,15 +152,25 @@ class GerenciadorDeProcessos:
         Implementa o algoritmo de escalonamento por prioridade.
         Ordena a fila de processos pela prioridade e executa cada processo até que seu tempo restante seja 0, finalizando-o.
         """        
+        # A chave de ordenação é a prioridade do processo
         self.fila_processos.sort(key=lambda p: p.prioridade)
+        # Enquanto houver processos na fila
         while self.fila_processos:
+            # Remove o primeiro processo da fila
             processo_atual = self.fila_processos.pop(0)
+            # Inicia a execução do processo
             processo_atual.iniciar()
+            # Enquanto o tempo restante do processo for maior que 0
             while processo_atual.tempo_restante > 0:
+                # Mostra o estado atual dos processos
                 self.exibir_estados_processos()
+                # Decrementa o tempo restante do processo
                 processo_atual.tempo_restante -= 1
+                # Incrementa o tempo atual
                 self.tempo_atual += 1
+            # Finaliza o processo
             processo_atual.finalizar()
+            # Adiciona o processo finalizado na lista de processos finalizados
             self.processos_finalizados.append(processo_atual)
 
     def simular(self, algoritmo='fifo', quantum=2):
