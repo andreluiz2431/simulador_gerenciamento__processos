@@ -1,7 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 from time import time
-from your_code_file import GerenciadorDeProcessos  # Substitua pelo arquivo onde está seu código de escalonamento
+from gerenciador_processos import GerenciadorDeProcessos  # Substitua pelo arquivo onde está seu código de escalonamento
 
 def gerar_dados_testes():
     """
