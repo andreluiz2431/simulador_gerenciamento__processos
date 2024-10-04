@@ -16,10 +16,7 @@ O projeto consiste em três arquivos principais:
 ### Importações
 import random
 
-import time
-
 - random: Para gerar números aleatórios, utilizados na criação dos tempos de execução e prioridades dos processos.
-- time: Para simular o tempo de execução dos processos.
 
 ### Classe: Processo
 Esta classe representa um processo que será gerenciado pelo simulador.
@@ -35,6 +32,7 @@ Métodos:
 - __init__(self, id, tempo_execucao, prioridade=0): Construtor da classe, inicializa um novo processo.
 - iniciar(self): Muda o estado do processo para 'Executando' e imprime uma mensagem.
 - bloquear(self): Muda o estado do processo para 'Bloqueado' e imprime uma mensagem.
+- desbloquear(self): Muda o estado do processo para 'Desbloqueado' e imprime uma mensagem.
 - finalizar(self): Muda o estado do processo para 'Finalizado' e imprime uma mensagem.
 - pronto(self): Muda o estado do processo para 'Pronto' e imprime uma mensagem.
 
@@ -48,6 +46,9 @@ Atributos:
 Métodos:
 - __init__(self): Construtor da classe, inicializa a fila de processos e a lista de processos finalizados.
 - criar_processo(self, tempo_execucao, prioridade=0): Cria um novo processo e o adiciona à fila de processos.
+- exibir_estados_processos(): Exibe os processos e seus dados
+- exibir_estados_processos_barra(): Exibe os processos e seus dados com barra de estimativa de tempo
+- executar_processos(self): Percorre e executa o processo
 - escalonar_fifo(self): Implementa o algoritmo FIFO para escalonamento de processos.
 Remove o primeiro processo da fila, inicia sua execução até que seu tempo restante seja 0 e finaliza o processo, armazenando-o na lista de finalizados.
 - escalonar_round_robin(self, quantum): Implementa o algoritmo Round Robin para escalonamento de processos.
