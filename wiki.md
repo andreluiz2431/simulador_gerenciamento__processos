@@ -1,3 +1,5 @@
+https://www.dcce.ibilce.unesp.br/~aleardo/cursos/fsc/cap03.php#:~:text=Em%20espera%20(ou%20bloqueado)%2C,)%2C%20quando%20não%20estiver%20executando.
+
 # Simulador de Gerenciamento de Processos
 
 ## Introdução

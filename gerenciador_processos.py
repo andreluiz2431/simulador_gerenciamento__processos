@@ -66,7 +66,7 @@ class GerenciadorDeProcessos:
             print(f"Processo {processo.id}: {processo.estado}, Tempo restante: {processo.tempo_restante}")
         print()
 
-    def exibir_estados_processos_graficamente(self):
+    def exibir_estados_processos_barra(self):
         """
         Exibe o estado atual dos processos na fila de processos.
 
@@ -80,10 +80,9 @@ class GerenciadorDeProcessos:
             print(f"Processo {processo.id}: {processo.estado:<10} {barra:<20}")
         print()
 
-    def escalonar_fifo(self):
+    def executar_processos(self):
         """
-        Implementa o algoritmo FIFO para escalonamento de processos.
-        Remove o primeiro processo da fila, inicia sua execução até que seu tempo restante seja 0 e finaliza o processo, armazenando-o na lista de finalizados.
+        Executa os processos na fila de processos.
         """
         # Enquanto houver processos na fila
         while self.fila_processos:
@@ -105,7 +104,7 @@ class GerenciadorDeProcessos:
                 while processo_atual.tempo_restante > 0:
                     # Enquanto o tempo restante do processo for maior que 0
                     # Mostra o estado atual dos processos
-                    self.exibir_estados_processos_graficamente()
+                    self.exibir_estados_processos_barra()
                     # Decrementa o tempo restante do processo
                     processo_atual.tempo_restante -= 1
                     # Incrementa o tempo atual
@@ -133,7 +132,7 @@ class GerenciadorDeProcessos:
             # Enquanto o tempo restante do processo for maior que 0
             while processo_atual.tempo_restante > 0:
                 # Mostra o estado atual dos processos
-                self.exibir_estados_processos_graficamente()
+                self.exibir_estados_processos_barra()
                 # Decrementa o tempo restante do processo
                 processo_atual.tempo_restante -= 1
                 # Incrementa o tempo atual
@@ -143,6 +142,13 @@ class GerenciadorDeProcessos:
             processo_atual.finalizar()
             # Adiciona o processo finalizado na lista de processos finalizados
             self.processos_finalizados.append(processo_atual)
+
+    def escalonar_fifo(self):
+        """
+        Implementa o algoritmo FIFO para escalonamento de processos.
+        Remove o primeiro processo da fila, inicia sua execução até que seu tempo restante seja 0 e finaliza o processo, armazenando-o na lista de finalizados.
+        """
+        self.executar_processos()
 
     def escalonar_round_robin(self, quantum):
         """
@@ -163,7 +169,7 @@ class GerenciadorDeProcessos:
             # Executa o processo por tempo_execucao vezes
             for _ in range(tempo_execucao):
                 # Mostra o estado atual dos processos
-                self.exibir_estados_processos_graficamente()
+                self.exibir_estados_processos_barra()
                 # Decrementa o tempo restante do processo
                 processo_atual.tempo_restante -= 1
                 # Incrementa o tempo atual
@@ -191,24 +197,9 @@ class GerenciadorDeProcessos:
         """
         # Ordena a fila de processos pelo tempo de execução
         self.fila_processos.sort(key=lambda p: p.tempo_execucao)
-        # Enquanto houver processos na fila
-        while self.fila_processos:
-            # Remove o primeiro processo da fila
-            processo_atual = self.fila_processos.pop(0)
-            # Inicia a execução do processo
-            processo_atual.iniciar()
-            # Enquanto o tempo restante do processo for maior que 0
-            while processo_atual.tempo_restante > 0:
-                # Mostra o estado atual dos processos
-                self.exibir_estados_processos_graficamente()
-                # Decrementa o tempo restante do processo
-                processo_atual.tempo_restante -= 1
-                # Incrementa o tempo atual
-                self.tempo_atual += 1
-            # Finaliza o processo
-            processo_atual.finalizar()
-            # Adiciona o processo finalizado na lista de processos finalizados
-            self.processos_finalizados.append(processo_atual)
+        
+        # Executa cada processo até que seu tempo restante seja 0
+        self.executar_processos()
 
     def escalonar_prioridade(self):
         """
@@ -217,24 +208,9 @@ class GerenciadorDeProcessos:
         """        
         # A chave de ordenação é a prioridade do processo
         self.fila_processos.sort(key=lambda p: p.prioridade)
-        # Enquanto houver processos na fila
-        while self.fila_processos:
-            # Remove o primeiro processo da fila
-            processo_atual = self.fila_processos.pop(0)
-            # Inicia a execução do processo
-            processo_atual.iniciar()
-            # Enquanto o tempo restante do processo for maior que 0
-            while processo_atual.tempo_restante > 0:
-                # Mostra o estado atual dos processos
-                self.exibir_estados_processos_graficamente()
-                # Decrementa o tempo restante do processo
-                processo_atual.tempo_restante -= 1
-                # Incrementa o tempo atual
-                self.tempo_atual += 1
-            # Finaliza o processo
-            processo_atual.finalizar()
-            # Adiciona o processo finalizado na lista de processos finalizados
-            self.processos_finalizados.append(processo_atual)
+        
+        # Executa cada processo até que seu tempo restante seja 0
+        self.executar_processos()
 
     def simular(self, algoritmo='fifo', quantum=2):
         """
@@ -255,29 +231,3 @@ class GerenciadorDeProcessos:
             self.escalonar_sjf()
         elif algoritmo == 'prioridade':
             self.escalonar_prioridade()
-
-'''
-        while self.fila_processos:
-            processo_atual = self.fila_processos.pop(0)
-
-            # Verifica se o processo precisa ser bloqueado
-            if processo_atual.tempo_restante > 0 and random.random() < 0.2:
-                processo_atual.bloquear()
-                print(f"Processo {processo_atual.id} foi bloqueado")
-                # Adiciona o processo bloqueado a uma fila de processos bloqueados
-                self.processos_bloqueados.append(processo_atual)
-            else:
-                # Executa o processo normalmente
-                processo_atual.iniciar()
-                while processo_atual.tempo_restante > 0:
-                    # ...
-                processo_atual.finalizar()
-
-        # Verifica se há processos bloqueados que precisam ser desbloqueados
-        for processo in self.processos_bloqueados:
-            if random.random() < 0.5:
-                processo.desbloquear()
-                print(f"Processo {processo.id} foi desbloqueado")
-                # Adiciona o processo desbloqueado à fila de processos prontos
-                self.fila_processos.append(processo)
-'''
