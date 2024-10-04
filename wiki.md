@@ -1,5 +1,12 @@
 https://www.dcce.ibilce.unesp.br/~aleardo/cursos/fsc/cap03.php#:~:text=Em%20espera%20(ou%20bloqueado)%2C,)%2C%20quando%20não%20estiver%20executando.
 
+# FAZER
+- No início não deixar todos os processos de prontidão, largar aos poucos, exemplo: FIFO, 30 processos, random(0, 5) processos Prontos para executar.
+- Fila de processos desbloqueados não podem estar separados da fila de processos, quendo desbloqueado alocar o mesmo de volta a fila de processos prontos.
+- Trabalhar com valores fixos em vez de aleatórios afim de testar e debugar em todo o código (tempo de execução de cada processo, tempo de bloqueio, quantidade de processos prontos para executar)
+
+
+
 # Simulador de Gerenciamento de Processos
 
 ## Introdução
