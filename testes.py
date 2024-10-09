@@ -1,7 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 from time import sleep
-from gerenciador_processos import GerenciadorDeProcessos  # Substitua 'your_code_file' pelo nome correto do arquivo que contém o código fornecido.
+from gerenciador_processos import GerenciadorDeProcessos 
 
 def gerar_dados_testes():
     """
