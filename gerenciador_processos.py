@@ -128,6 +128,9 @@ class GerenciadorDeProcessos:
         if self.fila_processos:
             self.executar_processos()
 
+        if self.processos_bloqueados:
+            self.executar_processos()
+
     def escalonar_fifo(self):
         """
         Implementa o algoritmo FIFO para escalonamento de processos.
@@ -197,6 +200,9 @@ class GerenciadorDeProcessos:
 
         # Executa os processos desbloqueados após eles entrarem na fila de processos novamente
         if self.fila_processos:
+            self.escalonar_round_robin()
+
+        if self.processos_bloqueados:
             self.escalonar_round_robin()
 
     def escalonar_sjf(self):
