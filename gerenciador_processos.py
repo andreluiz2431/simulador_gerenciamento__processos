@@ -81,7 +81,7 @@ class GerenciadorDeProcessos:
             print(f"Processo {processo.id}: {processo.estado:<10} {barra:<20}")
         print()
 
-    def executar_processos(self, escalonamento, intervalo_tempo=1, blocos_tamanho=10):
+    def executar_processos(self, escalonamento, intervalo_tempo=0, blocos_tamanho=10):
         """
         Executa os processos na fila de processos em blocos, com intervalo entre os blocos.
         """
