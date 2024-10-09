@@ -80,12 +80,18 @@ class GerenciadorDeProcessos:
             print(f"Processo {processo.id}: {processo.estado:<10} {barra:<20}")
         print()
 
-    def executar_processos(self):
+    def executar_processos(self, escalonamento):
         """
         Executa os processos na fila de processos.
         """
         # Enquanto houver processos na fila
         while self.fila_processos:
+            # Verifica qual escalonamento para ordenar os processos
+            if escalonamento =='sjf':
+                self.fila_processos.sort(key=lambda p: p.tempo_execucao)
+            elif escalonamento == 'prioridade':
+                self.fila_processos.sort(key=lambda p: p.prioridade)
+
             # Remove o primeiro processo da fila
             processo_atual = self.fila_processos.pop(0)
 
@@ -126,17 +132,17 @@ class GerenciadorDeProcessos:
         
         # Executa os processos desbloqueados após eles entrarem na fila de processos novamente
         if self.fila_processos:
-            self.executar_processos()
+            self.executar_processos(escalonamento)
 
         if self.processos_bloqueados:
-            self.executar_processos()
+            self.executar_processos(escalonamento)
 
     def escalonar_fifo(self):
         """
         Implementa o algoritmo FIFO para escalonamento de processos.
         Remove o primeiro processo da fila, inicia sua execução até que seu tempo restante seja 0 e finaliza o processo, armazenando-o na lista de finalizados.
         """
-        self.executar_processos()
+        self.executar_processos('fifo')
 
     def escalonar_round_robin(self, quantum):
         """
@@ -214,7 +220,7 @@ class GerenciadorDeProcessos:
         self.fila_processos.sort(key=lambda p: p.tempo_execucao)
         
         # Executa cada processo até que seu tempo restante seja 0
-        self.executar_processos()
+        self.executar_processos('sjf')
 
     def escalonar_prioridade(self):
         """
@@ -225,7 +231,7 @@ class GerenciadorDeProcessos:
         self.fila_processos.sort(key=lambda p: p.prioridade)
         
         # Executa cada processo até que seu tempo restante seja 0
-        self.executar_processos()
+        self.executar_processos('prioridade')
 
     def simular(self, algoritmo='fifo', quantum=2):
         """
