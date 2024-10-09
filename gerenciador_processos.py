@@ -114,33 +114,19 @@ class GerenciadorDeProcessos:
                 # Adiciona o processo finalizado na lista de processos finalizados
                 self.processos_finalizados.append(processo_atual)
 
-        # Verifica se há processos bloqueados que precisam ser desbloqueados
-        for processo in self.processos_bloqueados:
-            if random.random() < 0.5:
-                processo.desbloquear()
-                print(f"Processo {processo.id} foi desbloqueado")
-                # Adiciona o processo desbloqueado à fila de processos prontos
-                self.fila_processos.append(processo)
+            # Verifica se há processos bloqueados que precisam ser desbloqueados
+            for processo in self.processos_bloqueados[:]:
+                if random.random() < 0.2:
+                    processo.desbloquear()
+                    print(f"Processo {processo.id} foi desbloqueado")
+                    # Adiciona o processo desbloqueado à fila de processos prontos
+                    self.fila_processos.append(processo)
+                    # Remove o processo desbloqueado da fila de processos bloqueados
+                    self.processos_bloqueados.remove(processo)
         
         # Executa os processos desbloqueados após eles entrarem na fila de processos novamente
-        while self.fila_processos:
-            # Remove o primeiro processo da fila
-            processo_atual = self.fila_processos.pop(0)
-            # Inicia a execução do processo
-            processo_atual.iniciar()
-            # Enquanto o tempo restante do processo for maior que 0
-            while processo_atual.tempo_restante > 0:
-                # Mostra o estado atual dos processos
-                self.exibir_estados_processos_barra()
-                # Decrementa o tempo restante do processo
-                processo_atual.tempo_restante -= 1
-                # Incrementa o tempo atual
-                self.tempo_atual += 1
-
-            # Finaliza o processo
-            processo_atual.finalizar()
-            # Adiciona o processo finalizado na lista de processos finalizados
-            self.processos_finalizados.append(processo_atual)
+        if self.fila_processos:
+            self.executar_processos()
 
     def escalonar_fifo(self):
         """
