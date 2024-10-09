@@ -1,4 +1,5 @@
 import random
+import time
 
 class Processo:
     def __init__(self, id, tempo_execucao, prioridade=0):
@@ -80,62 +81,57 @@ class GerenciadorDeProcessos:
             print(f"Processo {processo.id}: {processo.estado:<10} {barra:<20}")
         print()
 
-    def executar_processos(self, escalonamento):
+    def executar_processos(self, escalonamento, intervalo_tempo=1, blocos_tamanho=10):
         """
-        Executa os processos na fila de processos.
+        Executa os processos na fila de processos em blocos, com intervalo entre os blocos.
         """
-        # Enquanto houver processos na fila
-        while self.fila_processos:
-            # Verifica qual escalonamento para ordenar os processos
-            if escalonamento =='sjf':
-                self.fila_processos.sort(key=lambda p: p.tempo_execucao)
-            elif escalonamento == 'prioridade':
-                self.fila_processos.sort(key=lambda p: p.prioridade)
-
-            # Remove o primeiro processo da fila
-            processo_atual = self.fila_processos.pop(0)
-
-            # Verifica se o processo precisa ser bloqueado
-            if processo_atual.tempo_restante > 0 and random.random() < 0.2:
-                # Bloqueia o processo
-                processo_atual.bloquear()
-                # Mostra o estado atual dos processos
-                print(f"Processo {processo_atual.id} foi bloqueado")
-                # Adiciona o processo bloqueado a uma fila de processos bloqueados
-                self.processos_bloqueados.append(processo_atual)
-            else:
-                # Executa o processo normalmente
-                processo_atual.iniciar()
-                # Enquanto o tempo restante do processo for maior que 0
-                while processo_atual.tempo_restante > 0:
-                    # Mostra o estado atual dos processos
-                    self.exibir_estados_processos_barra()
-                    # Decrementa o tempo restante do processo
-                    processo_atual.tempo_restante -= 1
-                    # Incrementa o tempo atual
-                    self.tempo_atual += 1
-
-                # Finaliza o processo
-                processo_atual.finalizar()
-                # Adiciona o processo finalizado na lista de processos finalizados
-                self.processos_finalizados.append(processo_atual)
-
-            # Verifica se há processos bloqueados que precisam ser desbloqueados
-            for processo in self.processos_bloqueados[:]:
-                if random.random() < 0.2:
-                    processo.desbloquear()
-                    print(f"Processo {processo.id} foi desbloqueado")
-                    # Adiciona o processo desbloqueado à fila de processos prontos
-                    self.fila_processos.append(processo)
-                    # Remove o processo desbloqueado da fila de processos bloqueados
-                    self.processos_bloqueados.remove(processo)
+        # Divide a fila de processos em blocos de tamanho blocos_tamanho
+        blocos_processos = [self.fila_processos[i:i + blocos_tamanho] for i in range(0, len(self.fila_processos), blocos_tamanho)]
         
-        # Executa os processos desbloqueados após eles entrarem na fila de processos novamente
-        if self.processos_bloqueados:
-            self.executar_processos(escalonamento)
+        for bloco in blocos_processos:
+            # Adiciona o bloco à fila de processos prontos
+            self.fila_processos = bloco
 
-        if self.fila_processos:
-            self.executar_processos(escalonamento)
+            # Enquanto houver processos na fila
+            while self.fila_processos:
+                # Verifica qual escalonamento para ordenar os processos
+                if escalonamento == 'sjf':
+                    self.fila_processos.sort(key=lambda p: p.tempo_execucao)
+                elif escalonamento == 'prioridade':
+                    self.fila_processos.sort(key=lambda p: p.prioridade)
+
+                # Remove o primeiro processo da fila
+                processo_atual = self.fila_processos.pop(0)
+
+                # Verifica se o processo precisa ser bloqueado
+                if processo_atual.tempo_restante > 0 and random.random() < 0.2:
+                    # Bloqueia o processo
+                    processo_atual.bloquear()
+                    print(f"Processo {processo_atual.id} foi bloqueado")
+                    self.processos_bloqueados.append(processo_atual)
+                else:
+                    # Executa o processo normalmente
+                    processo_atual.iniciar()
+                    while processo_atual.tempo_restante > 0:
+                        self.exibir_estados_processos_barra()
+                        processo_atual.tempo_restante -= 1
+                        self.tempo_atual += 1
+
+                    # Finaliza o processo
+                    processo_atual.finalizar()
+                    self.processos_finalizados.append(processo_atual)
+
+                # Verifica se há processos bloqueados que precisam ser desbloqueados
+                for processo in self.processos_bloqueados[:]:
+                    if random.random() < 0.2:
+                        processo.desbloquear()
+                        print(f"Processo {processo.id} foi desbloqueado")
+                        self.fila_processos.append(processo)
+                        self.processos_bloqueados.remove(processo)
+
+            # Após processar o bloco, simula um intervalo de tempo antes de processar o próximo bloco
+            print(f"Esperando {intervalo_tempo} segundos antes de adicionar o próximo bloco de processos.")
+            time.sleep(intervalo_tempo)
 
     def escalonar_fifo(self):
         """
