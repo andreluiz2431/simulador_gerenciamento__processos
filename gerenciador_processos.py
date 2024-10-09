@@ -131,10 +131,10 @@ class GerenciadorDeProcessos:
                     self.processos_bloqueados.remove(processo)
         
         # Executa os processos desbloqueados após eles entrarem na fila de processos novamente
-        if self.fila_processos:
+        if self.processos_bloqueados:
             self.executar_processos(escalonamento)
 
-        if self.processos_bloqueados:
+        if self.fila_processos:
             self.executar_processos(escalonamento)
 
     def escalonar_fifo(self):
